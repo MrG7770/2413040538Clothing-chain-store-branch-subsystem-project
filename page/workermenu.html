@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>员工信息权限表</title>
+    <link rel="stylesheet" href="../lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../css/public.css" media="all">
+    <style>
+        .layui-btn:not(.layui-btn-lg ):not(.layui-btn-sm):not(.layui-btn-xs) {
+            height: 34px;
+            line-height: 34px;
+            padding: 0 8px;
+        }
+        .search-form {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+        }
+        .search-form .layui-input-inline {
+            margin-right: 15px;
+            width: 200px;
+        }
+        .search-btn-group {
+            display: inline-block;
+        }
+        .result-popup-content {
+            padding: 10px 0;
+        }
+        .result-item {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        .result-label {
+            display: inline-block;
+            width: 80px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div>
+            <!-- 搜索表单 - 按姓名和职位搜索 -->
+            <form class="layui-form search-form" lay-filter="search-form">
+                <div class="layui-form-item">
+                    <div class="layui-input-inline">
+                        <input type="text" name="employeeName" placeholder="请输入员工姓名" class="layui-input">
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="position" placeholder="请输入职位" class="layui-input">
+                    </div>
+                    <div class="search-btn-group">
+                        <button class="layui-btn" lay-submit lay-filter="search">搜索</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="layui-btn-group">
+                <button class="layui-btn" id="btn-expand">全部展开</button>
+                <button class="layui-btn layui-btn-normal" id="btn-fold">全部折叠</button>
+            </div>
+            <!-- 表格渲染容器 -->
+            <table id="employee-table" class="layui-table" lay-filter="employee-table"></table>
+        </div>
+    </div>
+</div>
+<!-- 操作列模板 -->
+<script type="text/html" id="operate-bar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="../js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+<script>
+    layui.use(['table', 'treetable', 'form'], function () {
+        var $ = layui.jquery;
+        var table = layui.table;
+        var treetable = layui.treetable;
+        var form = layui.form;
+        var currentSearchParams = {};
+        var totalResults = 0;
+
+        // 渲染表格的方法，可传递搜索参数
+        function renderTable(searchParams = {}) {
+            currentSearchParams = searchParams;
+            layer.load(2);
+            treetable.render({
+                treeColIndex: 1,
+                treeSpid: -1,
+                treeIdName: 'id',
+                treePidName: 'parentId',
+                elem: '#employee-table',
+                url: '../api/employee.json',
+                where: searchParams, // 传递搜索参数到后端
+                page: false,
+                cols: [[
+                    {type: 'numbers', title: '序号'},
+                    {field: 'employeeName', minWidth: 120, title: '员工姓名'},
+                    {
+                        field: 'gender', width: 80, align: 'center', templet: function (d) {
+                            return d.gender === '男' ? '<span class="layui-badge layui-bg-green">男</span>' : '<span class="layui-badge layui-bg-blue">女</span>';
+                        }, title: '性别'
+                    },
+                    {field: 'phone', title: '联系电话'},
+                    {field: 'email', title: '电子邮箱', templet: function (d) { return d.email || '无'; }},
+                    {field: 'store', title: '所属门店'},
+                    {field: 'position', title: '职位'},
+                    {field: 'loginAccount', title: '登录账号'},
+                    {
+                        field: 'role', width: 150, align: 'center', templet: function (d) {
+                            var roles = {
+                                'admin': '管理员（全部权限）',
+                                'manager': '店长（管理权限）',
+                                'staff': '普通员工（基础权限）',
+                                'limited': '受限员工（部分权限）'
+                            };
+                            return roles[d.role] || '未知角色';
+                        }, title: '权限角色'
+                    },
+                    {
+                        field: 'status', width: 80, align: 'center', templet: function (d) {
+                            return d.status === '启用' ? '<span class="layui-badge layui-bg-green">启用</span>' : '<span class="layui-badge layui-bg-red">禁用</span>';
+                        }, title: '账号状态'
+                    },
+                    {field: 'remark', title: '备注信息', templet: function (d) { return d.remark || '无'; }},
+                    {templet: '#operate-bar', width: 120, align: 'center', title: '操作'}
+                ]],
+                done: function (res) {
+                    layer.closeAll('loading');
+                    // 记录总结果数（假设接口返回的数据在res.data中）
+                    totalResults = res.data ? res.data.length : 0;
+                    
+                    // 如果是搜索操作（不是初始加载），显示结果弹窗
+                    if (Object.keys(currentSearchParams).length > 0 && 
+                        (currentSearchParams.employeeName || currentSearchParams.position)) {
+                        showSearchResultPopup();
+                    }
+                }
+            });
+        }
+
+        // 显示搜索结果弹窗
+        function showSearchResultPopup() {
+            // 构建搜索条件文本
+            let conditions = [];
+            if (currentSearchParams.employeeName) {
+                conditions.push(`员工姓名: ${currentSearchParams.employeeName}`);
+            }
+            if (currentSearchParams.position) {
+                conditions.push(`职位: ${currentSearchParams.position}`);
+            }
+            
+            // 构建弹窗内容
+            let content = `
+                <div class="result-popup-content">
+                    <div class="result-item">
+                        <span class="result-label">搜索条件:</span>
+                        <span>${conditions.length > 0 ? conditions.join('，') : '无'}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">匹配结果:</span>
+                        <span><strong>${totalResults}</strong> 条员工信息</span>
+                    </div>
+                </div>
+            `;
+            
+            // 显示弹窗
+            layer.open({
+                type: 1,
+                title: '搜索结果',
+                content: content,
+                area: ['380px', 'auto'],
+                btn: ['确定'],
+                btnAlign: 'c',
+                shade: 0.3
+            });
+        }
+
+        // 初始渲染表格
+        renderTable();
+
+        // 监听搜索表单提交
+        form.on('submit(search)', function (data) {
+            // 收集并处理搜索参数
+            const searchParams = {
+                employeeName: data.field.employeeName.trim() || '',
+                position: data.field.position.trim() || ''
+            };
+            renderTable(searchParams);
+            return false; // 阻止表单默认提交
+        });
+
+        // 监听重置按钮
+        $('.search-form [type="reset"]').on('click', function() {
+            // 重置表单后重新渲染表格
+            setTimeout(() => {
+                renderTable();
+            }, 100);
+        });
+
+        // 全部展开按钮事件
+        $('#btn-expand').click(function () {
+            treetable.expandAll('#employee-table');
+        });
+
+        // 全部折叠按钮事件
+        $('#btn-fold').click(function () {
+            treetable.foldAll('#employee-table');
+        });
+
+        // 监听表格工具条事件
+        table.on('tool(employee-table)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'del') {
+                layer.confirm('确定删除该员工信息吗？', function (index) {
+                    obj.del();
+                    layer.close(index);
+                    layer.msg('删除成功');
+                });
+            } else if (layEvent === 'edit') {
+                layer.open({
+                    type: 2,
+                    title: '修改员工信息',
+                    content: '../page/editEmployee.html?id=' + data.id, // 传递员工ID
+                    area: ['600px', '450px'],
+                    shade: 0.2,
+                    shadeClose: true,
+                    end: function () {
+                        // 关闭弹窗后刷新表格，保留搜索条件
+                        var searchFormData = form.val('search-form');
+                        renderTable(searchFormData);
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

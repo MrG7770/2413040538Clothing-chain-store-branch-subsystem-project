@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>服装库存登记</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../css/public.css" media="all">
+    <link rel="stylesheet" href="../js/lay-module/step-lay/step.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <div class="layui-fluid">
+            <div class="layui-card">
+                <div class="layui-card-header">服装库存登记</div>
+                <div class="layui-card-body" style="padding-top: 40px;">
+                    <div class="layui-carousel" id="stepForm" lay-filter="stepForm" style="margin: 0 auto;">
+                        <div carousel-item>
+                            <div>
+                                <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">商品编号:</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" placeholder="请填写商品编号" class="layui-input" lay-verify="required" required />
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">商品名称:</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" placeholder="请填写商品名称" class="layui-input" lay-verify="required" required />
+                                        </div>
+                                    </div>
+									<div class="layui-form-item">
+									    <label class="layui-form-label">商品颜色:</label>
+									    <div class="layui-input-block">
+									        <input type="text" placeholder="请填写商品颜色" class="layui-input" lay-verify="required" required />
+									    </div>
+									</div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">商品类别:</label>
+                                        <div class="layui-input-block">
+                                            <select lay-verify="required">
+                                                <option value="">请选择类别</option>
+                                                <option value="1">男装</option>
+                                                <option value="2">女装</option>
+                                                <option value="3">童装</option>
+                                                <option value="4">配饰</option>
+                                            </select>
+                                        </div>
+                                    </div>
+									<div class="layui-form-item">
+									    <label class="layui-form-label">商品品牌:</label>
+									    <div class="layui-input-block">
+									        <select lay-verify="required">
+									            <option value="">请选择品牌</option>
+									            <option value="1">都市休闲</option>
+									            <option value="2">牛仔先锋</option>
+									            <option value="3">职场精英</option>
+									            <option value="4">优雅时刻</option>
+												<option value="4">活力运动</option>
+												<option value="4">温暖时光</option>
+												<option value="4">经典配饰</option>
+									        </select>
+									    </div>
+									</div>
+									<div class="layui-form-item">
+									    <label class="layui-form-label">商品尺码:</label>
+									    <div class="layui-input-block">
+									        <select lay-verify="required">
+									            <option value="">请选择商品尺码</option>
+									            <option value="1">S</option>
+									            <option value="2">M</option>
+									            <option value="3">L</option>
+									            <option value="4">XL</option>
+												<option value="4">XXL</option>X
+												<option value="4">XXXL</option>
+									        </select>
+									    </div>
+									</div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">入库数量:</label>
+                                        <div class="layui-input-block">
+                                            <input type="number" placeholder="请填写入库数量" class="layui-input" lay-verify="required|number" required />
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                    		<label class="layui-form-label">商品材质:</label>
+                                    	<div class="layui-input-block">
+                                    	<input type="text" placeholder="请填写商品材质" class="layui-input" lay-verify="required" required />
+                                    	</div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+                                            <button class="layui-btn" lay-submit lay-filter="formStep">
+                                                &emsp;下一步&emsp;
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div>
+                                <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 20px;">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">入库时间:</label>
+                                        <div class="layui-input-block">
+                                            <input type="datetime-local" class="layui-input" lay-verify="required" required />
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">入库批次:</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" placeholder="例如: 20230911-B01" class="layui-input" lay-verify="required" required />
+                                            <div class="layui-form-mid layui-word-aux">格式: 日期-批次号</div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">生产日期:</label>
+                                        <div class="layui-input-block">
+                                            <input type="date" class="layui-input" lay-verify="required" required />
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">保质期:</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" placeholder="例如: 12个月" class="layui-input" lay-verify="required" required />
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">验收人:</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" placeholder="请填写验收人姓名" class="layui-input" lay-verify="required" required />
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">入库备注:</label>
+                                        <div class="layui-input-block">
+                                            <textarea placeholder="请输入入库备注信息" class="layui-textarea"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+                                            <button type="button" class="layui-btn layui-btn-primary pre">上一步</button>
+                                            <button class="layui-btn" lay-submit lay-filter="formStep2">
+                                                &emsp;确认入库&emsp;
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div>
+                                <div style="text-align: center;margin-top: 70px;">
+                                    <i class="layui-icon layui-circle"
+                                       style="color: white;font-size:30px;font-weight:bold;background: #52C41A;padding: 20px;line-height: 80px;">&#xe605;</i>
+                                    <div style="font-size: 24px;color: #333;font-weight: 500;margin-top: 30px;">
+                                        入库登记成功
+                                    </div>
+                                    <div style="font-size: 14px;color: #666;margin-top: 20px;">入库单编号: GC20230911001</div>
+                                    <div style="font-size: 14px;color: #666;margin-top: 10px;">入库时间: <span id="showStockTime">2023-09-11 14:30:00</span></div>
+                                    <div style="font-size: 14px;color: #666;margin-top: 10px;">批次号: <span id="showBatchNo">20230911-B01</span></div>
+                                    <div style="font-size: 14px;color: #666;margin-top: 10px;">验收人: <span id="showChecker">张三</span></div>
+                                    <div style="font-size: 14px;color: #666;margin-top: 10px;">存储位置: A区-3货架-2层</div>
+                                </div>
+                                <div style="text-align: center;margin-top: 50px;">
+                                    <button class="layui-btn next" onclick="window.location.href = '../page/kgadd.html';">继续入库</button>
+                                    <button class="layui-btn layui-btn-primary" onclick="window.location.href = '../kg.html';">查看入库记录</button>
+                                    <button class="layui-btn layui-btn-normal" style="margin-left:10px;">打印入库单</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div style="color: #666;margin-top: 30px;margin-bottom: 40px;padding-left: 30px;">
+                        <h3>入库说明</h3><br>
+                        <h4>入库注意事项</h4>
+                        <p>1. 所有入库服装需检查包装是否完好，标签是否清晰</p>
+                        <p>2. 验收人需对入库商品数量和质量进行核实确认</p>
+                        <p>3. 批次号需按统一格式填写，便于后续追溯管理</p>
+                        <p>4. 入库后请及时更新库存系统，确保数据准确</p>
+                        <br><h4>常见问题</h4>
+                        <p>1. 入库数量与实际不符：请联系采购部门核实</p>
+                        <p>2. 商品信息错误：请联系商品管理部门更新基础数据</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="../js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'step'], function () {
+        var $ = layui.$,
+            form = layui.form,
+            step = layui.step;
+
+        // 初始化步骤条
+        step.render({
+            elem: '#stepForm',
+            filter: 'stepForm',
+            width: '100%',
+            stepWidth: '750px',
+            height: '550px',
+            stepItems: [{
+                title: '填写商品信息'
+            }, {
+                title: '填写入库信息'
+            }, {
+                title: '完成入库'
+            }]
+        });
+
+        // 存储表单数据
+        var formData = {};
+
+        // 第一步提交
+        form.on('submit(formStep)', function (data) {
+            // 保存第一步数据
+            formData.productInfo = data.field;
+            step.next('#stepForm');
+            return false;
+        });
+
+        // 第二步提交
+        form.on('submit(formStep2)', function (data) {
+            // 保存第二步数据
+            formData.stockInfo = data.field;
+            
+            // 在完成页显示关键信息
+            if (data.field['入库时间']) {
+                $('#showStockTime').text(formatDateTime(data.field['入库时间']));
+            }
+            if (data.field['入库批次']) {
+                $('#showBatchNo').text(data.field['入库批次']);
+            }
+            if (data.field['验收人']) {
+                $('#showChecker').text(data.field['验收人']);
+            }
+            
+            step.next('#stepForm');
+            return false;
+        });
+
+        // 上一步按钮
+        $('.pre').click(function () {
+            step.pre('#stepForm');
+        });
+
+        // 继续入库按钮
+        $('.next').click(function () {
+            // 重置表单
+            $('form')[0].reset();
+            $('form')[1].reset();
+            form.render();
+            // 返回第一步
+            step.to('#stepForm', 0);
+        });
+
+        // 格式化日期时间显示
+        function formatDateTime(dateTimeStr) {
+            if (!dateTimeStr) return '';
+            // 将datetime-local格式转换为易读格式
+            return dateTimeStr.replace('T', ' ');
+        }
+    });
+</script>
+</body>
+</html>

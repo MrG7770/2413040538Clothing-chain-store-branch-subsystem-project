@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>编辑入库记录</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="stylesheet" href="../../lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/layuimini.css" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">入库单ID</label>
+        <div class="layui-input-block">
+            <input type="text" name="id" placeholder="系统自动生成" value="" class="layui-input" disabled>
+            <tip>入库单唯一标识，系统自动生成。</tip>
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label required">商品编号</label>
+        <div class="layui-input-block">
+            <input type="text" name="productCode" lay-verify="required" lay-reqtext="商品编号不能为空" placeholder="请输入商品编号" value="" class="layui-input">
+            <tip>填写商品的唯一编号。</tip>
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label required">商品名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="productName" lay-verify="required" lay-reqtext="商品名称不能为空" placeholder="请输入商品名称" value="" class="layui-input">
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label required">商品类别</label>
+        <div class="layui-input-block">
+            <select name="category" lay-verify="required" lay-reqtext="请选择商品类别">
+                <option value="">请选择商品类别</option>
+                <option value="男装">男装</option>
+                <option value="女装">女装</option>
+                <option value="童装">童装</option>
+                <option value="配饰">配饰</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label required">入库数量</label>
+        <div class="layui-input-block">
+            <input type="number" name="quantity" lay-verify="required|number" lay-reqtext="入库数量不能为空" placeholder="请输入入库数量" value="" class="layui-input">
+            <tip>填写本次入库的商品数量。</tip>
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label required">采购单价</label>
+        <div class="layui-input-block">
+            <input type="number" step="0.01" name="unitPrice" lay-verify="required|number" lay-reqtext="采购单价不能为空" placeholder="请输入采购单价" value="" class="layui-input">
+            <tip>填写商品的采购单价，保留两位小数。</tip>
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label required">入库批次</label>
+        <div class="layui-input-block">
+            <input type="text" name="batchNo" lay-verify="required" lay-reqtext="入库批次不能为空" placeholder="请输入入库批次" value="" class="layui-input">
+            <tip>例如：20230915-B01</tip>
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label required">供应商</label>
+        <div class="layui-input-block">
+            <select name="supplier" lay-verify="required" lay-reqtext="请选择供应商">
+                <option value="">请选择供应商</option>
+                <option value="广州服装贸易公司">广州服装贸易公司</option>
+                <option value="上海时尚服饰有限公司">上海时尚服饰有限公司</option>
+                <option value="北京精品服装批发">北京精品服装批发</option>
+                <option value="深圳品牌服饰供应链">深圳品牌服饰供应链</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label required">入库时间</label>
+        <div class="layui-input-block">
+            <input type="datetime-local" name="stockTime" lay-verify="required" lay-reqtext="入库时间不能为空" class="layui-input">
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label required">验收人</label>
+        <div class="layui-input-block">
+            <input type="text" name="checker" lay-verify="required" lay-reqtext="验收人不能为空" placeholder="请输入验收人姓名" value="" class="layui-input">
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label required">状态</label>
+        <div class="layui-input-block">
+            <input type="radio" name="status" value="已入库" title="已入库" checked>
+            <input type="radio" name="status" value="待审核" title="待审核">
+            <input type="radio" name="status" value="已取消" title="已取消">
+        </div>
+    </div>
+    
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">入库备注</label>
+        <div class="layui-input-block">
+            <textarea name="remark" class="layui-textarea" placeholder="请输入入库备注信息"></textarea>
+            <tip>可填写商品质量、包装等额外信息。</tip>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn layui-btn-primary" id="cancelBtn">取消</button>
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>
+</div>
+<script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'layer'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        // 获取URL参数
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+        
+        // 加载数据
+        function loadData() {
+            var id = getUrlParam('id');
+            if (id) {
+                // 实际应用中通过AJAX加载数据
+                // 这里模拟加载数据
+                console.log('加载ID为' + id + '的入库记录数据');
+                
+                // 模拟数据填充示例
+                /*
+                var data = {
+                    "id": "GC20230911001",
+                    "productCode": "P001",
+                    "productName": "男士T恤",
+                    "category": "男装",
+                    "quantity": 100,
+                    "unitPrice": 59.9,
+                    "batchNo": "20230911-B01",
+                    "supplier": "广州服装贸易公司",
+                    "stockTime": "2023-09-11T14:30",
+                    "checker": "张三",
+                    "status": "已入库",
+                    "remark": "秋季新款"
+                };
+                
+                for (var key in data) {
+                    var $elem = $('[name="' + key + '"]');
+                    if ($elem.length) {
+                        if ($elem[0].type === 'radio') {
+                            $elem.each(function() {
+                                if ($(this).val() === data[key]) {
+                                    $(this).prop('checked', true);
+                                }
+                            });
+                        } else if ($elem[0].tagName === 'SELECT') {
+                            $elem.val(data[key]);
+                        } else {
+                            $elem.val(data[key]);
+                        }
+                    }
+                }
+                form.render();
+                */
+            }
+        }
+        
+        // 页面加载完成后加载数据
+        $(function() {
+            loadData();
+        });
+
+        // 取消按钮事件
+        $('#cancelBtn').click(function() {
+            var iframeIndex = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(iframeIndex);
+        });
+
+        // 监听提交
+        form.on('submit(saveBtn)', function (data) {
+            // 计算总金额
+            var totalPrice = (parseFloat(data.field.quantity) * parseFloat(data.field.unitPrice)).toFixed(2);
+            var submitData = {
+                ...data.field,
+                totalPrice: totalPrice
+            };
+            
+            var index = layer.alert(JSON.stringify(submitData, null, 2), {
+                title: '提交的入库记录信息',
+                area: ['600px', '400px']
+            }, function () {
+                // 关闭弹出层
+                layer.close(index);
+
+                // 关闭当前表单页面
+                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(iframeIndex);
+                
+                // 通知父页面刷新数据
+                parent.layui.table.reload('stockTable');
+            });
+
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>
+    

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>入库记录</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="../lib/layui-v2.6.3/css/layui.css" media="all">
+  <link rel="stylesheet" href="../css/layuimini.css" media="all">
+</head>
+
+<body>
+  <div class="layui-form layui-form-pane" style="margin: 10px;">
+    <div class="layui-form-item">
+      <label class="layui-form-label">入库单ID</label>
+      <div class="layui-input-inline">
+        <input type="text" name="id" placeholder="请输入入库单ID" autocomplete="off" class="layui-input">
+      </div>
+      <label class="layui-form-label">商品编号</label>
+      <div class="layui-input-inline">
+        <input type="text" name="productCode" placeholder="请输入商品编号" autocomplete="off" class="layui-input">
+      </div>
+      <label class="layui-form-label">商品类别</label>
+      <div class="layui-input-inline">
+        <input type="text" name="category" placeholder="请输入商品类别" autocomplete="off" class="layui-input">
+      </div>
+      <div class="layui-input-inline">
+        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="search">搜索</button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <!-- 工具栏设置： 添加入库记录、批量删除 -->
+    <script type="text/html" id="stockTableToolbar">
+      <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 新增入库 </button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 批量删除 </button>
+      </div>
+    </script>
+
+    <!-- 数据表格定义 -->
+    <table class="layui-hide" id="stockTable" lay-filter="stockTableFilter"></table>
+
+    <!--入库状态列-->
+    <script type="text/html" id="stockStatus">
+      {{#  if(d.status === '已入库'){ }}
+      <span class="layui-badge layui-bg-green">已入库</span>
+      {{#  } else if(d.status === '待审核'){ }}
+      <span class="layui-badge layui-bg-yellow">待审核</span>
+      {{#  } else { }}
+      <span class="layui-badge layui-bg-red">已取消</span>
+      {{#  } }}
+    </script>
+
+    <!-- 定义表格最后一列：操作 -->
+    <script type="text/html" id="stockTableOperation">
+      <a class="layui-btn  layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+      <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+      <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="print">打印单据</a>
+    </script>
+  </div>
+  <script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+  <script>
+    // 使用Layui的表单、表格和弹窗模块
+    layui.use(['form', 'table', 'layer'], function () {
+      var $ = layui.jquery;
+      var form = layui.form;
+      var table = layui.table;
+      var layer = layui.layer;
+      var tableData = []; // 存储表格数据
+      var originalData = []; // 存储原始数据用于恢复
+
+      // 渲染表格，保存表格实例以便重载
+      var tableIns = table.render({
+        elem: '#stockTable',
+        url: 'stockIn.json',
+        toolbar: '#stockTableToolbar',
+        defaultToolbar: ['filter', 'exports', 'print', {
+          title: '提示',
+          layEvent: 'LAYTABLE_TIPS',
+          icon: 'layui-icon-tips'
+        }],
+        cols: [[
+          { type: "checkbox", width: 50 },
+          { field: 'id', width: 100, title: '入库单ID', sort: true },
+          { field: 'productCode', width: 120, title: '商品编号' },
+          { field: 'productName', width: 150, title: '商品名称' },
+          { field: 'category', width: 100, title: '商品类别' },
+          { field: 'quantity', width: 80, title: '入库数量', sort: true },
+          { field: 'unitPrice', width: 90, title: '采购单价', sort: true },
+          { field: 'totalPrice', width: 100, title: '总金额', sort: true },
+          { field: 'batchNo', width: 130, title: '入库批次' },
+          { field: 'supplier', width: 150, title: '供应商' },
+          { field: 'stockTime', width: 160, title: '入库时间', sort: true },
+          { field: 'checker', width: 100, title: '验收人' },
+          {
+            field: 'status',
+            width: 100,
+            title: '状态',
+            templet: '#stockStatus',
+            unresize: true,
+            align: "center"
+          },
+          { title: '操作', minWidth: 200, toolbar: '#stockTableOperation', align: "center" }
+        ]],
+        limits: [10, 15, 20, 25, 50, 100],
+        limit: 15,
+        page: true,
+        skin: 'line',
+        done: function (res) {
+          // 保存表格数据到本地变量
+          tableData = JSON.parse(JSON.stringify(res.data));
+          originalData = JSON.parse(JSON.stringify(res.data)); // 深拷贝保存原始数据
+        }
+      });
+
+      // 搜索表单监听
+      form.on('submit(search)', function (data) {
+        // 显示加载层，提示用户正在搜索
+        var loadingIndex = layer.load(2, {
+          shade: [0.1, '#fff']
+        });
+
+        // 执行表格重载，传递搜索条件
+        tableIns.reload({
+          where: data.field, // 搜索的条件
+          page: {
+            curr: 1 // 重新从第1页开始
+          },
+          done: function (res, curr, count) {
+            // 关闭加载层
+            layer.close(loadingIndex);
+            // 更新本地数据
+            tableData = JSON.parse(JSON.stringify(res.data));
+            originalData = JSON.parse(JSON.stringify(res.data));
+            // 弹出最终的搜索信息，格式化为JSON字符串
+            layer.open({
+              title: '最终的搜索信息',
+              content: JSON.stringify(data.field, null, 2),
+              btn: ['确定'],
+              btnAlign: 'c',
+              shade: 0.1,
+              area: ['400px', 'auto']
+            });
+          }
+        });
+        return false;
+      });
+
+      /**
+       * toolbar监听事件（工具栏监听事件）
+       */
+      table.on('toolbar(stockTableFilter)', function (obj) {
+        console.log("工具栏事件:", obj.event); // 调试信息
+        
+        if (obj.event === 'add') {  // 监听添加操作
+          var index = layer.open({
+            title: '新增入库记录',
+            type: 2,
+            shade: 0.2,
+            maxmin: true,
+            shadeClose: true,
+            area: ['100%', '100%'],
+            content: '../page/csr.html'
+          });
+          $(window).on("resize", function () {
+            layer.full(index);
+          });
+        } else if (obj.event === 'delete') {  // 监听批量删除操作
+          // 关键修复：使用表格ID获取选中状态
+          var checkStatus = table.checkStatus('stockTable');
+          console.log("选中状态:", checkStatus); // 调试信息
+          
+          var selectedData = checkStatus.data;
+          
+          if (selectedData.length === 0) {
+            layer.msg('请选择需要删除的记录');
+            return;
+          }
+          
+          // 确认删除
+          layer.confirm('确定要删除选中的 ' + selectedData.length + ' 条记录吗？', { icon: 3 }, function (index) {
+            // 修复：使用字符串比较确保ID匹配正确
+            var selectedIds = selectedData.map(item => String(item.id));
+            
+            console.log("待删除ID:", selectedIds); // 调试信息
+            console.log("当前数据:", tableData.map(item => String(item.id))); // 调试信息
+            
+            // 过滤数据 - 关键修复点
+            tableData = tableData.filter(item =>!selectedIds.includes(String(item.id)));
+            
+            console.log("删除后剩余数据:", tableData.length); // 调试信息
+            
+            // 重新渲染表格，使用正确的参数
+            tableIns.reload({
+              data: tableData,
+              url: null, // 关键修复：确保使用本地数据而非重新请求
+              page: {
+                curr: 1 // 重置到第一页
+              }
+            });
+            
+            layer.close(index);
+            layer.msg('删除成功，共删除 ' + selectedData.length + ' 条记录');
+          });
+        }
+      });
+
+      // 监听表格复选框选择
+      table.on('checkbox(stockTableFilter)', function (obj) {
+        console.log("复选框选择:", obj);
+      });
+
+      // 监听表格最后一列的操作
+      table.on('tool(stockTableFilter)', function (obj) {
+        var data = obj.data;
+        if (obj.event === 'detail') {
+          var index = layer.open({
+            title: '入库详情',
+            type: 2,
+            shade: 0.2,
+            maxmin: true,
+            shadeClose: true,
+            area: ['100%', '100%'],
+          });
+          $(window).on("resize", function () {
+            layer.full(index);
+          });
+          return false;
+        } else if (obj.event == 'edit') {
+          var index = layer.open({
+            title: '编辑入库记录',
+            type: 2,
+            shade: 0.2,
+            maxmin: true,
+            shadeClose: true,
+            area: ['100%', '100%'],
+            content: '../page/table/edit.html',
+          });
+          $(window).on("resize", function () {
+            layer.full(index);
+          });
+          return false;
+        } else if (obj.event == 'delete') {
+          layer.confirm('您确认删除该入库记录吗？', { icon: 3 }, function (index) {
+            obj.del();
+            // 更新本地数据
+            tableData = tableData.filter(item => String(item.id)!== String(data.id));
+            layer.close(index);
+            layer.msg('删除成功');
+          });
+        } else if (obj.event == 'print') {
+          layer.msg('正在打印入库单: ' + data.id);
+          // 这里添加打印逻辑
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

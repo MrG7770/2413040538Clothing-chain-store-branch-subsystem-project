@@ -1,0 +1,117 @@
+{
+    "code": 0,
+    "msg": "",
+    "count": 10,
+    "data": [
+        {
+            "id": 1,
+            "customerName": "张三",
+            "contactPhone": "13812345678",
+            "productName": "手机",
+            "serviceType": "维修",
+            "description": "手机屏幕出现裂痕",
+            "createTime": "2025-09-10 10:00:00",
+            "handler": "李四",
+            "status": "待处理"
+        },
+        {
+            "id": 2,
+            "customerName": "王五",
+            "contactPhone": "13687654321",
+            "productName": "电脑",
+            "serviceType": "软件故障排查",
+            "description": "电脑系统频繁死机",
+            "createTime": "2025-09-12 14:30:00",
+            "handler": "赵六",
+            "status": "处理中"
+        },
+        {
+            "id": 3,
+            "customerName": "孙七",
+            "contactPhone": "13333333333",
+            "productName": "电视",
+            "serviceType": "硬件检测",
+            "description": "电视画面有雪花点",
+            "createTime": "2025-09-13 09:15:00",
+            "handler": "钱八",
+            "status": "已完成"
+        },
+        {
+            "id": 4,
+            "customerName": "周九",
+            "contactPhone": "13111111111",
+            "productName": "冰箱",
+            "serviceType": "制冷故障维修",
+            "description": "冰箱制冷效果不佳",
+            "createTime": "2025-09-14 16:40:00",
+            "handler": "吴十",
+            "status": "待处理"
+        },
+        {
+            "id": 5,
+            "customerName": "郑十一",
+            "contactPhone": "13222222222",
+            "productName": "洗衣机",
+            "serviceType": "排水故障维修",
+            "description": "洗衣机排水不畅",
+            "createTime": "2025-09-15 11:20:00",
+            "handler": "冯十二",
+            "status": "处理中"
+        },
+        {
+            "id": 6,
+            "customerName": "陈十三",
+            "contactPhone": "13444444444",
+            "productName": "空调",
+            "serviceType": "不制冷维修",
+            "description": "空调开启后不制冷",
+            "createTime": "2025-09-08 13:00:00",
+            "handler": "褚十四",
+            "status": "已完成"
+        },
+        {
+            "id": 7,
+            "customerName": "卫十五",
+            "contactPhone": "13555555555",
+            "productName": "微波炉",
+            "serviceType": "加热故障维修",
+            "description": "微波炉加热不均匀",
+            "createTime": "2025-09-09 15:30:00",
+            "handler": "蒋十六",
+            "status": "待处理"
+        },
+        {
+            "id": 8,
+            "customerName": "沈十七",
+            "contactPhone": "13777777777",
+            "productName": "烤箱",
+            "serviceType": "温控故障维修",
+            "description": "烤箱温度控制不准确",
+            "createTime": "2025-09-07 18:20:00",
+            "handler": "韩十八",
+            "status": "处理中"
+        },
+        {
+            "id": 9,
+            "customerName": "杨十九",
+            "contactPhone": "13999999999",
+            "productName": "电饭煲",
+            "serviceType": "煮饭功能异常维修",
+            "description": "电饭煲煮饭不熟",
+            "createTime": "2025-09-06 12:10:00",
+            "handler": "朱二十",
+            "status": "已完成"
+        },
+        {
+            "id": 10,
+            "customerName": "秦二十一",
+            "contactPhone": "13000000000",
+            "productName": "电水壶",
+            "serviceType": "不加热维修",
+            "description": "电水壶无法加热水",
+            "createTime": "2025-09-05 17:00:00",
+            "handler": "尤二十二",
+            "status": "待处理"
+        }
+    ]
+}

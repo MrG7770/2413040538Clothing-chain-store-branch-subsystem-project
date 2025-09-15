@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>编辑库存</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../css/public.css" media="all">
+    <link rel="stylesheet" href="../js/lay-module/step-lay/step.css" media="all">
+</head>
+
+<body>
+  <div class="layuimini-container">
+    <div class="layuimini-main">
+      <form class="layui-form" action="" lay-filter="editStockForm">
+        <!-- 这里假设通过 URL 参数获取商品编号，实际可根据项目传参方式调整 -->
+        <input type="hidden" name="productCode" id="productCode">
+        <div class="layui-form-item">
+          <label class="layui-form-label">商品编号</label>
+          <div class="layui-input-block">
+            <input type="text" name="productCodeShow" id="productCodeShow" lay-verify="required" placeholder="请输入商品编号"
+              autocomplete="off" class="layui-input" disabled>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">商品名称</label>
+          <div class="layui-input-block">
+            <input type="text" name="productName" lay-verify="required" placeholder="请输入商品名称" autocomplete="off"
+              class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">服装类别</label>
+          <div class="layui-input-block">
+            <select name="category" lay-verify="required">
+              <option value="">请选择服装类别</option>
+              <option value="上衣">上衣</option>
+              <option value="裤子">裤子</option>
+              <option value="裙子">裙子</option>
+              <option value="外套">外套</option>
+              <option value="配饰">配饰</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">品牌</label>
+          <div class="layui-input-block">
+            <input type="text" name="brand" lay-verify="required" placeholder="请输入品牌" autocomplete="off"
+              class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">颜色</label>
+          <div class="layui-input-block">
+            <input type="text" name="color" lay-verify="required" placeholder="请输入颜色" autocomplete="off"
+              class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">尺寸</label>
+          <div class="layui-input-block">
+            <input type="text" name="size" lay-verify="required" placeholder="请输入尺寸" autocomplete="off"
+              class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">材质</label>
+          <div class="layui-input-block">
+            <input type="text" name="material" lay-verify="required" placeholder="请输入材质" autocomplete="off"
+              class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">成本价</label>
+          <div class="layui-input-block">
+            <input type="text" name="costPrice" lay-verify="required|number" placeholder="请输入成本价" autocomplete="off"
+              class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">售价</label>
+          <div class="layui-input-block">
+            <input type="text" name="sellPrice" lay-verify="required|number" placeholder="请输入售价" autocomplete="off"
+              class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">库存数量</label>
+          <div class="layui-input-block">
+            <input type="text" name="stockQuantity" lay-verify="required|number" placeholder="请输入库存数量"
+              autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">预警阈值</label>
+          <div class="layui-input-block">
+            <input type="text" name="warningThreshold" lay-verify="required|number" placeholder="请输入预警阈值"
+              autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">库存状态</label>
+          <div class="layui-input-block">
+            <select name="stockStatus" lay-verify="required">
+              <option value="库存充足">库存充足</option>
+              <option value="库存预警">库存预警</option>
+              <option value="缺货">缺货</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="submitEditStock">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+<script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="../js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+  <script>
+    layui.use(['form', 'layer', 'jquery'], function () {
+      var form = layui.form,
+        layer = layui.layer,
+        $ = layui.jquery;
+
+      // 假设从父页面或 URL 参数获取要编辑的商品编号，这里只是示例，实际需根据项目情况获取
+      var productCode = "CL-2023-001"; // 示例商品编号
+      $("#productCode").val(productCode);
+      $("#productCodeShow").val(productCode);
+
+      // 这里可以通过 Ajax 从后台获取该商品编号对应的详细信息并填充到表单
+      // 示例：模拟获取数据并填充
+      var mockData = {
+        productName: "纯棉修身T恤",
+        category: "上衣",
+        brand: "都市休闲",
+        color: "白色",
+        size: "M",
+        material: "100%棉",
+        costPrice: "35.5",
+        sellPrice: "89",
+        stockQuantity: "120",
+        warningThreshold: "30",
+        stockStatus: "库存充足"
+      };
+      form.val("editStockForm", mockData);
+
+      // 表单提交
+      form.on('submit(submitEditStock)', function (data) {
+        // 这里可以通过 Ajax 将编辑后的数据提交到后台
+        // 示例：只是弹出提交的数据
+        layer.alert(JSON.stringify(data.field), {
+          title: '提交的库存编辑数据'
+        }, function () {
+          // 假设提交成功后关闭当前页面并刷新父页面（如果是弹窗形式）
+          var index = parent.layer.getFrameIndex(window.name);
+          parent.layer.close(index);
+          parent.location.reload();
+        });
+        return false;
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改员工信息</title>
+    <link rel="stylesheet" href="../lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../css/public.css" media="all">
+    <style>
+        .layui-form-item {
+            margin-bottom: 15px;
+        }
+        .layui-form-label {
+            width: 100px;
+        }
+        .layui-input-block {
+            margin-left: 130px;
+        }
+        .layui-card {
+            margin: 15px;
+        }
+        .layui-card-body {
+            padding: 15px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <h3>修改员工信息</h3>
+        </div>
+        <div class="layui-card-body">
+            <form class="layui-form" lay-filter="employee-form">
+                <input type="hidden" name="id" id="employeeId">
+                
+                <div class="layui-form-item">
+                    <label class="layui-form-label">员工姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="employeeName" lay-verify="required" placeholder="请输入员工姓名" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="gender" value="男" title="男" checked>
+                        <input type="radio" name="gender" value="女" title="女">
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <label class="layui-form-label">联系电话</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="phone" lay-verify="required|phone" placeholder="请输入联系电话" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <label class="layui-form-label">电子邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="email" lay-verify="email" placeholder="请输入电子邮箱" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <label class="layui-form-label">所属门店</label>
+                    <div class="layui-input-block">
+                        <select name="store" lay-verify="required">
+                            <option value="">请选择门店</option>
+                            <option value="总部">总部</option>
+                            <option value="北京分店">北京分店</option>
+                            <option value="上海分店">上海分店</option>
+                            <option value="广州分店">广州分店</option>
+                            <option value="深圳分店">深圳分店</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <label class="layui-form-label">职位</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="position" lay-verify="required" placeholder="请输入职位" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <label class="layui-form-label">登录账号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="loginAccount" lay-verify="required" placeholder="请输入登录账号" autocomplete="off" class="layui-input" readonly>
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <label class="layui-form-label">权限角色</label>
+                    <div class="layui-input-block">
+                        <select name="role" lay-verify="required">
+                            <option value="">请选择权限角色</option>
+                            <option value="admin">管理员（全部权限）</option>
+                            <option value="manager">店长（管理权限）</option>
+                            <option value="staff">普通员工（基础权限）</option>
+                            <option value="limited">受限员工（部分权限）</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <label class="layui-form-label">账号状态</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="status" value="启用" title="启用" checked>
+                        <input type="radio" name="status" value="禁用" title="禁用">
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备注信息</label>
+                    <div class="layui-input-block">
+                        <textarea name="remark" placeholder="请输入备注信息" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="submit-btn">提交修改</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        <button type="button" class="layui-btn layui-btn-normal" id="cancel-btn">取消</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script src="../js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+    <script>
+        layui.use(['form', 'layer', 'jquery'], function () {
+            var form = layui.form;
+            var layer = layui.layer;
+            var $ = layui.jquery;
+            
+            // 获取URL中的员工ID
+            function getUrlParam(name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                return r ? decodeURIComponent(r[2]) : null;
+            }
+            
+            var employeeId = getUrlParam('id');
+            
+            // 如果没有获取到员工ID，提示错误并关闭窗口
+            if (!employeeId) {
+                layer.error('获取员工信息失败，请重试');
+                setTimeout(function() {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                }, 1500);
+                return;
+            }
+            
+            // 回显员工信息
+            $.get('../api/employee.json', function(res) {
+                if (res.code === 0 && res.data.length > 0) {
+                    // 查找当前员工信息
+                    var employeeData = null;
+                    for (var i = 0; i < res.data.length; i++) {
+                        if (res.data[i].id == employeeId) {
+                            employeeData = res.data[i];
+                            break;
+                        }
+                    }
+                    
+                    if (employeeData) {
+                        // 填充表单数据
+                        form.val('employee-form', {
+                            "id": employeeData.id,
+                            "employeeName": employeeData.employeeName,
+                            "gender": employeeData.gender,
+                            "phone": employeeData.phone,
+                            "email": employeeData.email || '',
+                            "store": employeeData.store,
+                            "position": employeeData.position,
+                            "loginAccount": employeeData.loginAccount,
+                            "role": employeeData.role,
+                            "status": employeeData.status,
+                            "remark": employeeData.remark || ''
+                        });
+                        form.render(); // 重新渲染表单
+                    } else {
+                        layer.error('未找到员工信息');
+                    }
+                } else {
+                    layer.error('获取员工列表失败');
+                }
+            }, 'json').fail(function() {
+                layer.error('请求失败，请检查网络');
+            });
+            
+            // 监听表单提交
+            form.on('submit(submit-btn)', function(data) {
+                // 模拟提交到后端
+                layer.load(2);
+                
+                // 实际应用中这里应该是AJAX请求后端接口
+                setTimeout(function() {
+                    layer.closeAll('loading');
+                    layer.msg('修改成功', {icon: 1});
+                    
+                    // 关闭当前窗口并刷新父页面表格
+                    setTimeout(function() {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                        parent.location.reload(); // 刷新父页面
+                    }, 1000);
+                }, 800);
+                
+                return false; // 阻止表单跳转
+            });
+            
+            // 取消按钮事件
+            $('#cancel-btn').click(function() {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            });
+        });
+    </script>
+</body>
+</html>

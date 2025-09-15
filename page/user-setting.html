@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>基本资料</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../css/public.css" media="all">
+    <style>
+        .layui-form-item .layui-input-company {width: auto;padding-right: 10px;line-height: 38px;}
+        .address-select {display: flex;gap: 10px;}
+        .address-select .layui-input-inline {flex: 1;}
+    </style>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <div class="layui-form layuimini-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">管理账号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="username" lay-verify="required" lay-reqtext="管理账号不能为空" placeholder="请输入管理账号"  value="admin" class="layui-input">
+                    <tip>填写自己管理账号的名称。</tip>
+                </div>
+            </div>
+            
+            <!-- 新增店面地址相关字段 -->
+            <div class="layui-form-item">
+                <label class="layui-form-label required">店面地址</label>
+                <div class="layui-input-block">
+                    <div class="address-select">
+                        <div class="layui-input-inline">
+                            <select name="province" lay-verify="required" lay-reqtext="省份不能为空" lay-filter="province">
+                                <option value="">请选择省份</option>
+                                <option value="北京市">北京市</option>
+                                <option value="上海市">上海市</option>
+                                <option value="广东省">广东省</option>
+                                <option value="江苏省">江苏省</option>
+                                <option value="浙江省">浙江省</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select name="city" lay-verify="required" lay-reqtext="城市不能为空" lay-filter="city">
+                                <option value="">请选择城市</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select name="district" lay-verify="required" lay-reqtext="区/县不能为空">
+                                <option value="">请选择区/县</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-input-block" style="margin-top: 10px;">
+                        <input type="text" name="addressDetail" lay-verify="required" lay-reqtext="详细地址不能为空" 
+                               placeholder="请输入详细地址（街道、门牌号等）" class="layui-input">
+                        <tip>请填写详细的店面地址，包括街道、门牌号等信息。</tip>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label required">手机</label>
+                <div class="layui-input-block">
+                    <input type="number" name="phone" lay-verify="required|phone" lay-reqtext="手机不能为空" placeholder="请输入手机"  value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-block">
+                    <input type="email" name="email" lay-verify="email" placeholder="请输入邮箱"  value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">备注信息</label>
+                <div class="layui-input-block">
+                    <textarea name="remark" class="layui-textarea" placeholder="请输入备注信息"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="../js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+<script>
+    layui.use(['form','miniTab'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            miniTab = layui.miniTab;
+
+        // 城市数据
+        var cityData = {
+            "北京市": ["北京市"],
+            "上海市": ["上海市"],
+            "广东省": ["广州市", "深圳市", "珠海市", "佛山市", "中山市"],
+            "江苏省": ["南京市", "苏州市", "无锡市", "常州市"],
+            "浙江省": ["杭州市", "宁波市", "温州市", "绍兴市"]
+        };
+        
+        // 区县数据
+        var districtData = {
+            "北京市": ["东城区", "西城区", "朝阳区", "海淀区", "丰台区"],
+            "上海市": ["黄浦区", "徐汇区", "长宁区", "静安区", "普陀区"],
+            "广州市": ["天河区", "越秀区", "海珠区", "番禺区", "白云区"],
+            "深圳市": ["福田区", "南山区", "宝安区", "龙华区", "罗湖区"]
+            // 可根据需要补充更多城市的区县数据
+        };
+
+        // 监听省份选择
+        form.on('select(province)', function(data){
+            var province = data.value;
+            var citySelect = document.querySelector('select[name="city"]');
+            var districtSelect = document.querySelector('select[name="district"]');
+            
+            // 清空城市和区县选择
+            citySelect.innerHTML = '<option value="">请选择城市</option>';
+            districtSelect.innerHTML = '<option value="">请选择区/县</option>';
+            
+            // 填充城市数据
+            if(province && cityData[province]){
+                cityData[province].forEach(function(city){
+                    var option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+            }
+            
+            form.render('select');
+        });
+        
+        // 监听城市选择
+        form.on('select(city)', function(data){
+            var city = data.value;
+            var districtSelect = document.querySelector('select[name="district"]');
+            
+            // 清空区县选择
+            districtSelect.innerHTML = '<option value="">请选择区/县</option>';
+            
+            // 填充区县数据
+            if(city && districtData[city]){
+                districtData[city].forEach(function(district){
+                    var option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                });
+            } else if(city) {
+                // 如果没有对应区县数据，添加默认选项
+                var option = document.createElement('option');
+                option.value = city;
+                option.textContent = "默认区";
+                districtSelect.appendChild(option);
+            }
+            
+            form.render('select');
+        });
+
+        // 监听提交
+        form.on('submit(saveBtn)', function (data) {
+            // 拼接完整地址
+            var fullAddress = data.field.province + 
+                             (data.field.city ? "-" + data.field.city : "") + 
+                             (data.field.district ? "-" + data.field.district : "") + 
+                             (data.field.addressDetail ? "-" + data.field.addressDetail : "");
+            
+            // 显示提交信息，包含完整地址
+            var submitData = {
+                ...data.field,
+                "完整地址": fullAddress
+            };
+            
+            var index = layer.alert(JSON.stringify(submitData, null, 2), {
+                title: '最终的提交信息'
+            }, function () {
+                layer.close(index);
+                miniTab.deleteCurrentByIframe();
+            });
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

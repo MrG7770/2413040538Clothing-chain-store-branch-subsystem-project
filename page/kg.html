@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>服装库存管理</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="../lib/layui-v2.6.3/css/layui.css" media="all">
+  <link rel="stylesheet" href="../css/layuimini.css" media="all">
+</head>
+<body>
+<div class="layui-form layui-form-pane" style="margin: 10px;">
+  <div class="layui-form-item">
+    <label class="layui-form-label">商品编号</label>
+    <div class="layui-input-inline">
+      <input type="text" name="productCode" placeholder="请输入商品编号" autocomplete="off" class="layui-input">
+    </div>
+    <label class="layui-form-label">商品名称</label>
+    <div class="layui-input-inline">
+      <input type="text" name="productName" placeholder="请输入商品名称" autocomplete="off" class="layui-input">
+    </div>
+    <label class="layui-form-label">服装类别</label>
+    <div class="layui-input-inline">
+      <select name="category">
+        <option value="">全部类别</option>
+        <option value="上衣">上衣</option>
+        <option value="裤子">裤子</option>
+        <option value="裙子">裙子</option>
+        <option value="外套">外套</option>
+        <option value="配饰">配饰</option>
+      </select>
+    </div>
+    <div class="layui-input-inline">
+      <button class="layui-btn layui-btn-normal" lay-submit lay-filter="search">搜索</button>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">颜色</label>
+    <div class="layui-input-inline">
+      <input type="text" name="color" placeholder="请输入颜色" autocomplete="off" class="layui-input">
+    </div>
+    <label class="layui-form-label">尺寸</label>
+    <div class="layui-input-inline">
+      <select name="size">
+        <option value="">全部尺寸</option>
+        <option value="XS">XS</option>
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+        <option value="XXL">XXL</option>
+      </select>
+    </div>
+    <label class="layui-form-label">库存状态</label>
+    <div class="layui-input-inline">
+      <select name="stockStatus">
+        <option value="">全部状态</option>
+        <option value="充足">库存充足</option>
+        <option value="预警">库存预警</option>
+        <option value="缺货">缺货</option>
+      </select>
+    </div>
+  </div>
+</div>
+<div>
+  <!-- 工具栏设置： 添加商品、批量调整库存、批量删除 -->
+  <script type="text/html" id="clothingTableToolbar">
+    <div class="layui-btn-container">
+      <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加商品 </button>
+      <button class="layui-btn layui-btn-warm layui-btn-sm" lay-event="adjust"> 批量调整库存 </button>
+      <button class="layui-btn layui-btn-danger layui-btn-sm data-delete-btn" lay-event="delete"> 批量删除 </button>
+    </div>
+  </script>
+
+  <!-- 数据表格定义 -->
+  <table class="layui-hide" id="clothingTable" lay-filter="clothingTableFilter"></table>
+
+  <!--库存状态列-->
+  <script type="text/html" id="stockStatus">
+    {{#  if(d.stockStatus === '充足'){ }}
+    <span class="layui-badge layui-bg-green">库存充足</span>
+    {{#  } else if(d.stockStatus === '预警'){ }}
+    <span class="layui-badge layui-bg-yellow">库存预警</span>
+    {{#  } else { }}
+    <span class="layui-badge layui-bg-red">缺货</span>
+    {{#  } }}
+  </script>
+
+  <!-- 定义表格最后一列：操作 -->
+  <script type="text/html" id="clothingTableOperation">
+    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="stockIn">入库</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="stockOut">出库</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs data-count-delete" lay-event="delete">删除</a>
+  </script>
+</div>
+<script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script>
+  // 使用Layui的表单、表格和弹窗模块
+  layui.use(['form', 'table', 'layer'], function () {
+    var $ = layui.jquery;
+    var form = layui.form;
+    var table = layui.table;
+    var layer = layui.layer;
+
+    // 渲染表格，保存表格实例以便重载
+    var tableIns = table.render({
+      elem: '#clothingTable',
+      url: 'clothingStock.json',
+      toolbar: '#clothingTableToolbar',
+      defaultToolbar: ['filter', 'exports', 'print', {
+        title: '提示',
+        layEvent: 'LAYTABLE_TIPS',
+        icon: 'layui-icon-tips'
+      }],
+      cols: [[
+        { type: "checkbox", width: 50 },
+        { field: 'productCode', width: 120, title: '商品编号', sort: true },
+        { field: 'productName', width: 150, title: '商品名称' },
+        { field: 'category', width: 100, title: '服装类别' },
+        { field: 'brand', width: 120, title: '品牌' },
+        { field: 'color', width: 90, title: '颜色' },
+        { field: 'size', width: 80, title: '尺寸' },
+        { field: 'material', width: 120, title: '材质' },
+        { field: 'costPrice', width: 90, title: '成本价', sort: true },
+        { field: 'sellingPrice', width: 90, title: '售价', sort: true },
+        { field: 'stockQuantity', width: 100, title: '库存数量', sort: true },
+        { field: 'warningThreshold', width: 100, title: '预警阈值' },
+        {
+          field: 'stockStatus',
+          width: 100,
+          title: '库存状态',
+          templet: '#stockStatus',
+          unresize: true,
+          align: "center"
+        },
+        { field: 'lastUpdate', width: 160, title: '最后更新时间', sort: true },
+        { title: '操作', minWidth: 250, toolbar: '#clothingTableOperation', align: "center" }
+      ]],
+      limits: [10, 15, 20, 25, 50, 100],
+      limit: 15,
+      page: true,
+      skin: 'line'
+    });
+
+    // 搜索表单监听
+    form.on('submit(search)', function (data) {
+      // 显示加载层，提示用户正在搜索
+      var loadingIndex = layer.load(2, {
+        shade: [0.1, '#fff']
+      });
+
+      // 执行表格重载，传递搜索条件
+      tableIns.reload({
+        where: data.field, // 搜索的条件
+        page: {
+          curr: 1 // 重新从第 1 页开始
+        },
+        done: function (res, curr, count) {
+          // 关闭加载层
+          layer.close(loadingIndex);
+          // 弹出最终的搜索信息，格式化为 JSON 字符串
+          layer.open({
+            title: '搜索条件',
+            content: JSON.stringify(data.field, null, 2),
+            btn: ['确定'],
+            btnAlign: 'c',
+            shade: 0.1,
+            area: ['400px', 'auto']
+          });
+        }
+      });
+      return false;
+    });
+
+    /**
+     * toolbar监听事件（工具栏监听事件）
+     */
+    table.on('toolbar(clothingTableFilter)', function (obj) {
+      if (obj.event === 'add') {  // 监听添加操作
+        var index = layer.open({
+          title: '添加服装商品',
+          type: 2,
+          shade: 0.2,
+          maxmin: true,
+          shadeClose: true,
+          area: ['100%', '100%'],
+          content: '../page/kgadd.html'// 指向添加商品页面
+        });
+        $(window).on("resize", function () {
+          layer.full(index);
+        });
+      } else if (obj.event === 'adjust') {  // 监听批量调整库存操作
+        var checkStatus = table.checkStatus('clothingTable')
+          , data = checkStatus.data;
+        if (data.length === 0) {
+          layer.msg('请选择需要调整库存的商品');
+          return;
+        }
+        layer.prompt({
+          formType: 0,
+          title: '批量调整库存数量 (可为负数)',
+          value: 0
+        }, function(value, index){
+          layer.close(index);
+          // 这里添加实际调整库存逻辑
+          layer.msg('已为 ' + data.length + ' 件商品调整库存: ' + value);
+        });
+      } else if (obj.event === 'delete') {  // 监听批量删除操作
+        var checkStatus = table.checkStatus('clothingTable')
+          , data = checkStatus.data;
+        if (data.length === 0) {
+          layer.msg('请选择需要删除的记录');
+          return;
+        }
+        layer.confirm('确定要删除选中的 ' + data.length + ' 条记录吗？', { icon: 3 }, function (index) {
+          // 这里添加实际删除逻辑
+          layer.close(index);
+          layer.msg('删除成功');
+        });
+      }
+    });
+
+    // 监听表格复选框选择
+    table.on('checkbox(clothingTableFilter)', function (obj) {
+      console.log(obj);
+    });
+
+    // 监听表格最后一列的操作
+    table.on('tool(clothingTableFilter)', function (obj) {
+      var data = obj.data;
+      if (obj.event === 'detail') {
+        var index = layer.open({
+          title: '商品详情: ' + data.productName,
+          type: 2,
+          shade: 0.2,
+          maxmin: true,
+          shadeClose: true,
+          area: ['100%', '100%'],
+          content: '../page/clothing/detail.html?id=' + data.productCode
+        });
+        $(window).on("resize", function () {
+          layer.full(index);
+        });
+        return false;
+      } else if (obj.event == 'edit') {
+        var index = layer.open({
+          title: '编辑商品信息',
+          type: 2,
+          shade: 0.2,
+          maxmin: true,
+          shadeClose: true,
+          area: ['100%', '100%'],
+          content: '../page/kgedit.html?id=' + data.productCode,
+        });
+        $(window).on("resize", function () {
+          layer.full(index);
+        });
+        return false;
+      } else if (obj.event == 'stockIn') {
+        layer.prompt({
+          formType: 0,
+          title: '入库数量',
+          value: 1
+        }, function(value, index){
+          layer.close(index);
+          // 这里添加实际入库逻辑
+          layer.msg(data.productName + '(' + data.size + ') 入库成功: ' + value);
+        });
+      } else if (obj.event == 'stockOut') {
+        layer.prompt({
+          formType: 0,
+          title: '出库数量',
+          value: 1
+        }, function(value, index){
+          if(value > data.stockQuantity) {
+            layer.msg('出库数量不能大于库存数量', {icon: 2});
+            return;
+          }
+          layer.close(index);
+          // 这里添加实际出库逻辑
+          layer.msg(data.productName + '(' + data.size + ') 出库成功: ' + value);
+        });
+      } else if (obj.event == 'delete') {
+        layer.confirm('您确认删除该商品记录吗？', { icon: 3 }, function (index) {
+          obj.del();
+          layer.close(index);
+          layer.msg('删除成功');
+        });
+      }
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{
+  "code": 0,
+  "msg": "",
+  "count": 8,
+  "data": [
+    {
+      "customerId": "C001",
+      "customerName": "张三",
+      "customerPhone": "13812345678",
+      "customerEmail": "zhangsan@example.com",
+      "registerDate": "2025-01-15",
+      "type": "普通用户"
+    },
+    {
+      "customerId": "C002",
+      "customerName": "李四",
+      "customerPhone": "13987654321",
+      "customerEmail": "lisi@example.com",
+      "registerDate": "2024-11-20",
+      "type": "VIP用户"
+    },
+    {
+      "customerId": "C003",
+      "customerName": "王五",
+      "customerPhone": "13765432198",
+      "customerEmail": "wangwu@example.com",
+      "registerDate": "2025-02-10",
+      "type": "普通用户"
+    },
+    {
+      "customerId": "C004",
+      "customerName": "赵六",
+      "customerPhone": "13698765432",
+      "customerEmail": "zhaoliu@example.com",
+      "registerDate": "2024-09-05",
+      "type": "VIP用户"
+    },
+    {
+      "customerId": "C005",
+      "customerName": "孙七",
+      "customerPhone": "13579864210",
+      "customerEmail": "sunqi@example.com",
+      "registerDate": "2025-03-01",
+      "type": "普通用户"
+    },
+    {
+      "customerId": "C006",
+      "customerName": "周八",
+      "customerPhone": "13468257913",
+      "customerEmail": "zhouba@example.com",
+      "registerDate": "2024-07-12",
+      "type": "VIP用户"
+    },
+    {
+      "customerId": "C007",
+      "customerName": "吴九",
+      "customerPhone": "13345678912",
+      "customerEmail": "wujiu@example.com",
+      "registerDate": "2025-04-20",
+      "type": "普通用户"
+    },
+    {
+      "customerId": "C008",
+      "customerName": "郑十",
+      "customerPhone": "13212345678",
+      "customerEmail": "zhengshi@example.com",
+      "registerDate": "2024-08-08",
+      "type": "VIP用户"
+    }
+  ]
+}
