@@ -224,19 +224,15 @@
                     layer.msg('删除成功');
                 });
             } else if (layEvent === 'edit') {
-                layer.open({
-                    type: 2,
-                    title: '修改员工信息',
-                    content: '../page/editEmployee.html?id=' + data.id, // 传递员工ID
-                    area: ['600px', '450px'],
-                    shade: 0.2,
-                    shadeClose: true,
-                    end: function () {
-                        // 关闭弹窗后刷新表格，保留搜索条件
-                        var searchFormData = form.val('search-form');
-                        renderTable(searchFormData);
-                    }
-                });
+                // 修改操作：跳转到修改页面，而非弹窗
+                // 构建跳转URL，包含员工ID参数
+                var editUrl = '../page/editEmployee.html?id=' + data.id;
+                
+                // 在当前窗口跳转
+                window.location.href = editUrl;
+                
+                // 如果需要在新窗口打开，可以使用：
+                // window.open(editUrl, '_blank');
             }
         });
     });
