@@ -1,0 +1,207 @@
+{
+  "code": 0,
+  "msg": "",
+  "count": 20,
+  "data": [
+    {
+      "recordId": "FIN20250901001",
+      "type": "收入",
+      "transactionType": "销售服装",
+      "amount": 899.00,
+      "date": "2025-09-01",
+      "paymentMethod": "微信支付",
+      "handler": "张三",
+      "remark": "销售秋季新款连衣裙2件"
+    },
+    {
+      "recordId": "FIN20250901002",
+      "type": "支出",
+      "transactionType": "进货成本",
+      "amount": 5600.00,
+      "date": "2025-09-01",
+      "paymentMethod": "银行转账",
+      "handler": "李四",
+      "remark": "采购秋季上衣30件"
+    },
+    {
+      "recordId": "FIN20250902001",
+      "type": "收入",
+      "transactionType": "销售服装",
+      "amount": 1299.00,
+      "date": "2025-09-02",
+      "paymentMethod": "支付宝",
+      "handler": "张三",
+      "remark": "销售西装套装1套"
+    },
+    {
+      "recordId": "FIN20250903001",
+      "type": "收入",
+      "transactionType": "销售服装",
+      "amount": 459.00,
+      "date": "2025-09-03",
+      "paymentMethod": "现金",
+      "handler": "王五",
+      "remark": "销售牛仔裤2条"
+    },
+    {
+      "recordId": "FIN20250904001",
+      "type": "支出",
+      "transactionType": "水电费",
+      "amount": 320.50,
+      "date": "2025-09-04",
+      "paymentMethod": "银行代扣",
+      "handler": "李四",
+      "remark": "8月份水电费"
+    },
+    {
+      "recordId": "FIN20250905001",
+      "type": "收入",
+      "transactionType": "销售服装",
+      "amount": 699.00,
+      "date": "2025-09-05",
+      "paymentMethod": "微信支付",
+      "handler": "张三",
+      "remark": "销售针织衫3件"
+    },
+    {
+      "recordId": "FIN20250906001",
+      "type": "支出",
+      "transactionType": "进货成本",
+      "amount": 8900.00,
+      "date": "2025-09-06",
+      "paymentMethod": "银行转账",
+      "handler": "李四",
+      "remark": "采购冬季外套15件"
+    },
+    {
+      "recordId": "FIN20250907001",
+      "type": "收入",
+      "transactionType": "销售服装",
+      "amount": 1599.00,
+      "date": "2025-09-07",
+      "paymentMethod": "支付宝",
+      "handler": "王五",
+      "remark": "销售羽绒服1件"
+    },
+    {
+      "recordId": "FIN20250908001",
+      "type": "支出",
+      "transactionType": "店面租金",
+      "amount": 5000.00,
+      "date": "2025-09-08",
+      "paymentMethod": "银行转账",
+      "handler": "李四",
+      "remark": "9月份店面租金"
+    },
+    {
+      "recordId": "FIN20250909001",
+      "type": "收入",
+      "transactionType": "销售服装",
+      "amount": 359.00,
+      "date": "2025-09-09",
+      "paymentMethod": "现金",
+      "handler": "张三",
+      "remark": "销售T恤2件"
+    },
+    {
+      "recordId": "FIN20250910001",
+      "type": "支出",
+      "transactionType": "员工工资",
+      "amount": 12000.00,
+      "date": "2025-09-10",
+      "paymentMethod": "银行代发",
+      "handler": "李四",
+      "remark": "8月份员工工资"
+    },
+    {
+      "recordId": "FIN20250911001",
+      "type": "收入",
+      "transactionType": "销售服装",
+      "amount": 799.00,
+      "date": "2025-09-11",
+      "paymentMethod": "微信支付",
+      "handler": "王五",
+      "remark": "销售休闲裤3条"
+    },
+    {
+      "recordId": "FIN20250912001",
+      "type": "支出",
+      "transactionType": "其他支出",
+      "amount": 280.00,
+      "date": "2025-09-12",
+      "paymentMethod": "支付宝",
+      "handler": "张三",
+      "remark": "购买店内装饰品"
+    },
+    {
+      "recordId": "FIN20250913001",
+      "type": "收入",
+      "transactionType": "销售服装",
+      "amount": 1199.00,
+      "date": "2025-09-13",
+      "paymentMethod": "支付宝",
+      "handler": "张三",
+      "remark": "销售风衣1件"
+    },
+    {
+      "recordId": "FIN20250914001",
+      "type": "收入",
+      "transactionType": "其他收入",
+      "amount": 500.00,
+      "date": "2025-09-14",
+      "paymentMethod": "现金",
+      "handler": "李四",
+      "remark": "旧衣架出售"
+    },
+    {
+      "recordId": "FIN20250915001",
+      "type": "支出",
+      "transactionType": "进货成本",
+      "amount": 6200.00,
+      "date": "2025-09-15",
+      "paymentMethod": "银行转账",
+      "handler": "李四",
+      "remark": "采购毛衣20件"
+    },
+    {
+      "recordId": "FIN20250916001",
+      "type": "收入",
+      "transactionType": "销售服装",
+      "amount": 899.00,
+      "date": "2025-09-16",
+      "paymentMethod": "微信支付",
+      "handler": "王五",
+      "remark": "销售卫衣2件"
+    },
+    {
+      "recordId": "FIN20250917001",
+      "type": "支出",
+      "transactionType": "其他支出",
+      "amount": 150.00,
+      "date": "2025-09-17",
+      "paymentMethod": "现金",
+      "handler": "张三",
+      "remark": "维修收银设备"
+    },
+    {
+      "recordId": "FIN20250918001",
+      "type": "收入",
+      "transactionType": "销售服装",
+      "amount": 1499.00,
+      "date": "2025-09-18",
+      "paymentMethod": "支付宝",
+      "handler": "张三",
+      "remark": "销售皮衣1件"
+    },
+    {
+      "recordId": "FIN20250919001",
+      "type": "支出",
+      "transactionType": "水电费",
+      "amount": 280.30,
+      "date": "2025-09-19",
+      "paymentMethod": "银行代扣",
+      "handler": "李四",
+      "remark": "9月份水电费"
+    }
+  ]
+}
